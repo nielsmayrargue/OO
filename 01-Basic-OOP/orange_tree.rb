@@ -1,40 +1,46 @@
 class OrangeTree
   
-attr_accessor :age, :size, :number_oranges, :death_age
-
   def initialize
     @age = 0
     @size = 0
     @number_oranges = 0
-    @death_age = 27
+    @alive = true
   end
   
   def measure_height
-    @age < @death_age ? "#{@size}m" : "A dead tree can't be measured!"
+    @alive ? "#{@size}m" : "A dead tree can't be measured!"
   end
   
   def count_the_oranges
-    @age < @death_age ? "#{number_oranges} oranges" : "A dead tree has no oranges.."
+    @alive ? "#{@number_oranges} oranges" : "A dead tree has no oranges.."
   end
   
   def pick_an_orange
-    if @age < @death_age 
+    if @alive 
+      if self.any_orange?
       @number_oranges -= 1
       "You pick a delicious juicy orange"
-
+    else 
+      "You search every branch.. but no oranges"
+    end
     else 
      "A dead tree has nothing to offer.."
     end
   end
+
+  def any_orange?
+    @number_oranges > 0
+  end
   
   def one_year_passes
     @age += 1
-    if @age < @death_age
+    @alive = false if @age == 27
+    if @alive
       @number_oranges = 0
       @number_oranges = rand(118..131)
       @size += 5
       "This year your tree grew to #{@size} m tall, and produced #{@number_oranges} oranges"
-    elsif @age == @death_age
+    elsif @alive
       "Oh, no! The tree is too old, and has died.."
     else 
       "A year later, the tree is still dead.."
