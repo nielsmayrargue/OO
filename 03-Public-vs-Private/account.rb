@@ -2,90 +2,103 @@
 class DepositError < StandardError
 end
 
+class Transaction
+  attr_reader :amount, :date, :time
+
+  def initialize(amount,time)
+    @amount = amount
+    @date = time.to_a[0,3]
+    @time = time.to_a[3,3]
+  end
+
+  def to_s
+    return "#{@amount} euros on #{@date.to_s} at #{@time.to_s}"
+  end
+
+end
+
+
 class BankAccount
 
   MIN_DEPOSIT =  100
 
-  attr_reader :name, :position
+  attr_reader :name, :position, :transactions
 
   def initialize(name, iban, initial_deposit, password)
     raise DepositError, "Insufficient deposit" unless initial_deposit > MIN_DEPOSIT
     @password = password
-    @transactions = []
     @position = 0
     @name, @iban = name, iban
+    @transactions = []
+    @allowed = true
     
     add_transaction(initial_deposit)
   end
     
   def withdraw(amount)
-    puts "whats your password bro ?"
-    pswd_try = gets.chomp
-    tries = 1
-    if pswd_try == @password
-      amount = amount * (-1)
-      add_transaction(amount)
+    check_password
+    if @allowed == true && @position > amount
       puts "Bitch ! you just withdrawed #{amount} euros ! Don't drink too much dude..."
-    elsif pswd_try != @password && tries < 3
-      puts "try again, and focus !"
-      tries += 1
-      pswd_try = gets.chomp
-    else 
-      puts "The police is coming bro, you're fucked !"
+      amount = -amount 
+      add_transaction(amount)
+    else
+      puts "refused transaction"
     end
-  end
+  end 
   
   def deposit(amount)
-    puts "whats your password bro ?"
-    pswd_try = gets.chomp
-    tries = 1
-    if pswd_try == @password
-      amount = amount * (-1)
+    check_password
+    if @allowed == true
+      puts "Nice ! you just made a #{amount} euros deposit ! Finally growing up..."
       add_transaction(amount)
-      puts "Great Sir ! You made a #{amount} euros deposit ! Looks like you finally grow up..."
-    elsif pswd_try != @password && tries < 3
-      puts "try again, and focus !"
-      tries += 1
-      pswd_try = gets.chomp
-    else 
-      puts "The police is coming bro, you're fucked !"
+    else
+      puts "refused transaction"
     end
   end
+
+  def check_password
+    unless @allowed == false
+      tries = 1
+      puts "whats your password bro ?"
+      pswd_try = gets.chomp
+      until pswd_try == @password 
+        puts "try again, and focus !"
+        pswd_try = gets.chomp
+        tries += 1
+      break if tries > 10
+          puts "The police is coming bro, you're fucked !"
+          @allowed = false
+          return
+      end
+    end
+  end
+
   
-  
-  def transactions_history(args = {})
+ def transactions_history(args = {})
     # Should print transactions, BUT NOT return the transaction array !
     if args[:password] == @password
-      puts @transactions.to_s
+      puts transactions
     elsif args.empty?
-      "no password given"
-    else
-      "wrong password"
+      puts "no password given"
+    else 
+      puts "Wrong ! You drunk ?"
     end
   end
   
   def iban
-    puts "whats your password bro ?"
-    pswd_try = gets.chomp
-    puts "your IBAN is #{@iban.to_s[0,4]}**************#{@iban.to_s[-1,-5]}" if pswd_try == @password
+    return"#{@iban.to_s[0,4]}**************#{@iban[-3,3]}"
   end
-    
-  
+   
   def to_s
     # Method used when printing account object as string (also used for string interpolation)
-    puts "Owner: #{@name}"
-    puts "IBAN: #{iban}"
-    puts "Current amount: #{@position}"
+    return "Owner: #{@name}\nYour IBAN is: #{iban}\nCurrent amount: #{@position}"
   end
           
   private  
   
   def add_transaction(amount)
-    # Main account logic
-    # Should add the amount in the transactions array
-    @transactions << amount
-    # Should update the current position
     @position += amount
+    @transactions <<Transaction.new(amount,Time.now)
   end
     
 end
@@ -93,7 +106,7 @@ end
 # TESTING YOUR BANK ACCOUNT
 
 # In the outside world, create a new account for Bruce Lee
-account = BankAccount.new("Bruce Lee", "FR14-2004-1010-0505-0001-3M02-606", 200, "brucelit")
+account = BankAccount.new("Bruce Lee", "FR14-2004-1010-0505-0001-3M02-606", 1000, "brucelit")
 
 # Accessible infos
 puts account.name # => Bruce Lee
