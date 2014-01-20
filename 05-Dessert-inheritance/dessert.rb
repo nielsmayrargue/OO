@@ -20,13 +20,12 @@ class JellyBean < Dessert
   attr_accessor :flavor
 
   def initialize(name, calories, flavor)
-    @name = name
-    @calories = calories
+    super(name, calories)
     @flavor = flavor
   end
   
   def delicious?
-    return false if @flavor == "black licorice"
+    false if @flavor == "black licorice"
   end
   
 end
