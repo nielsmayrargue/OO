@@ -63,9 +63,10 @@ class BankAccount
  def transactions_history(args = {})
     # Should print transactions, BUT NOT return the transaction array !
     if args[:password] == @password
-      puts transactions
+      @transactions.dup
     elsif args.empty?
       puts "no password given"
+      return nil
     else 
       puts "Wrong ! You drunk ?"
     end
@@ -110,9 +111,9 @@ account.deposit(100) # => You've just made a 100 euros deposit
 account.deposit(650) # => You've just made a 650 euros deposit
 
 # Print transactions history with password
-account.transactions_history(password: "brucelit") # => [200, -515, 100, 650]
-account.transactions_history(password: "brucewayne") # => wrong password
-account.transactions_history() # => no password given
+puts account.transactions_history(password: "brucelit") # => [200, -515, 100, 650]
+puts account.transactions_history(password: "brucewayne") # => wrong password
+puts account.transactions_history() # => no password given
 
 
 # Check current position
