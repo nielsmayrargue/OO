@@ -1,22 +1,8 @@
+
+require_relative 'transaction'
 # This is how you define your own custom exception classes
 class DepositError < StandardError
 end
-
-class Transaction
-  attr_reader :amount, :date, :time
-
-  def initialize(amount,time)
-    @amount = amount
-    @date = time.to_a[0,3]
-    @time = time.to_a[3,3]
-  end
-
-  def to_s
-    return "#{@amount} euros on #{@date.to_s} at #{@time.to_s}"
-  end
-
-end
-
 
 class BankAccount
 
@@ -98,7 +84,7 @@ class BankAccount
   
   def add_transaction(amount)
     @position += amount
-    @transactions <<Transaction.new(amount,Time.now)
+    @transactions <<Transaction.new(amount)
   end
     
 end

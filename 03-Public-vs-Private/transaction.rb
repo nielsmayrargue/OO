@@ -1,9 +1,14 @@
 class Transaction
+  attr_reader :amount, :date, :time
+
   def initialize(amount)
-    # Initialize amount and date of transaction
+    @amount = amount
+    @date = Time.now.to_a[3,3]
+    @time = Time.now.to_a[0,3]
   end
-  
+
   def to_s
-    # Nicely print transaction infos using Time#strftime.
+    return "#{@amount} euros on #{@date.join("/")} at #{@time.reverse.join("'")}"
   end
+
 end
