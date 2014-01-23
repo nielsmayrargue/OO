@@ -2,7 +2,7 @@ require_relative 'cookbook'
 require_relative 'user_interface'
 
 
-UserInterface.launch
+UserInterface.new.launch
 
 =begin
 #driver tests

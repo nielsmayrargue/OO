@@ -26,6 +26,7 @@ class CsvAccessor
     CSV.open(@csv_path, "wb") do |csv|
       @saved_recipes << [recipe_infos[:name], recipe_infos[:type], recipe_infos[:content]]
       @saved_recipes.each { |recipe| csv << recipe }
+      puts "your new recipe #{recipe_infos[:name]} has just been added to your cookbook !"
     end
 	end
 
@@ -36,8 +37,9 @@ class CsvAccessor
       @saved_recipes.delete(recipe) if recipe[0].empty?
     end
     CSV.open(@csv_path, "wb") do |csv|
-    @saved_recipes.each { |recipe| csv << recipe }
+      @saved_recipes.each { |recipe| csv << recipe }
     end
+    puts "This recipe #{recipe_name} has just been deleted from your cookbook !"
   end
 
 end

@@ -15,7 +15,7 @@ class Cookbook
 		@csv_accessor.add(recipe_infos)
 	end
 
-	def delete(recipe_name)
+	def delete_recipe(recipe_name)
 		@csv_accessor.delete(recipe_name)
 	end
 
