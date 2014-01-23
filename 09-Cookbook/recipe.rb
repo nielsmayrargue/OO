@@ -1,9 +1,15 @@
 class Recipe
 
-	def initialize(recipe_infos)
-		@name = recipe_infos.name
-		@type = recipe_infos.type
-		@content = recipe_infos.content
+attr_reader :name, :type, :content
+
+	def initialize(infos)
+		@name = infos[:name]
+		@type = infos[:type]
+		@content = infos[:content]
+	end
+
+	def to_s
+		return "#{@name}, #{@type}, #{@content}"
 	end
 
 end
